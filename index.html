@@ -11,6 +11,13 @@
     height: 100%;
     vertical-align: bottom;
   }
+
+  .container {
+    min-height: 100vh;
+    max-width: 100vw;
+  }
+
+
   .product-card {
     position: relative;
     max-width: 200px;
@@ -52,19 +59,19 @@
 </head>
 <body>
 
-<div class="product-card" id="product-card">
-  <div class="product-images">
-    <img class="product-image" src="https://www.technodom.kz/_next/image?url=https%3A%2F%2Fapi.technodom.kz%2Ff3%2Fapi%2Fv1%2Fimages%2Figrovaya_konsol_sony_playstation_5_cfi_1208a_270956_1q.jpg&w=384&q=100">
-    <img class="product-image" src="https://www.technodom.kz/_next/image?url=https%3A%2F%2Fapi.technodom.kz%2Ff3%2Fapi%2Fv1%2Fimages%2Fsmartfon_apple_iphone_15_pro_max_256gb_natural_titanium_mu793_274420_1.jpg&w=384&q=100">
-    <img class="product-image" src="https://api.technodom.kz/f3/api/v1/images/1bce88d3-7a71-11ec-abd6-02420a01346a">
-    <img class="product-image" src="https://api.technodom.kz/f3/api/v1/images/rog_1.png_ae82e8d9006f87b890730dfb63b578b7">
-    <img class="product-image" src="https://api.technodom.kz/f3/api/v1/images/159083_1asdz.jpg_1fbfd9d0b4637d20f915c3750696c3b0">
-    <img class="product-image" src=" https://www.technodom.kz/_next/image?url=https%3A%2F%2Fapi.technodom.kz%2Ff3%2Fapi%2Fv1%2Fimages%2F264186_1.jpg&w=384&q=100">
+<div class="container">
+  <div class="product-card" id="product-card">
+    <div class="product-images">
+      <img class="product-image">
+      <img class="product-image">
+      <img class="product-image">
+      <img class="product-image">
+      <img class="product-image">
+      <img class="product-image">
+    </div>
+    <div class="dots-container"></div>
   </div>
-  <div class="dots-container"></div>
 </div>
-
-<div id="product-card"></div>
 
 <script>
   class ProductSlider {
@@ -144,7 +151,9 @@ const imagesDots = [];
 
 slidesCount.forEach(container => {
   const images = container.querySelectorAll('img');
-  images.forEach(img => {
+  images.forEach((img, index) => {
+    const randomImage = `https://picsum.photos/400/300?random=${index}`;
+    img.src = randomImage;
     imagesDots.push(img);
   });
 });
