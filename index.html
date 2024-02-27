@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Card</title>
+<style>
+  
+  img {
+    max-width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+  }
+  .product-card {
+    position: relative;
+    max-width: 200px;
+    width: 100%;
+    overflow: hidden;
+    margin: 10px auto;
+    cursor: pointer;
+  }
+  
+  .product-images {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #bbb;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  .dots-container {
+    text-align: center;
+  }
+  
+  .dot.active {
+    background-color: #333;
+  }
+</style>
+</head>
+<body>
+
+<div class="product-card" id="product-card">
+  <div class="product-images">
+    <img class="product-image" src="https://www.technodom.kz/_next/image?url=https%3A%2F%2Fapi.technodom.kz%2Ff3%2Fapi%2Fv1%2Fimages%2Figrovaya_konsol_sony_playstation_5_cfi_1208a_270956_1q.jpg&w=384&q=100">
+    <img class="product-image" src="https://www.technodom.kz/_next/image?url=https%3A%2F%2Fapi.technodom.kz%2Ff3%2Fapi%2Fv1%2Fimages%2Fsmartfon_apple_iphone_15_pro_max_256gb_natural_titanium_mu793_274420_1.jpg&w=384&q=100">
+    <img class="product-image" src="https://api.technodom.kz/f3/api/v1/images/1bce88d3-7a71-11ec-abd6-02420a01346a">
+    <img class="product-image" src="https://api.technodom.kz/f3/api/v1/images/rog_1.png_ae82e8d9006f87b890730dfb63b578b7">
+    <img class="product-image" src="https://api.technodom.kz/f3/api/v1/images/159083_1asdz.jpg_1fbfd9d0b4637d20f915c3750696c3b0">
+    <img class="product-image" src=" https://www.technodom.kz/_next/image?url=https%3A%2F%2Fapi.technodom.kz%2Ff3%2Fapi%2Fv1%2Fimages%2F264186_1.jpg&w=384&q=100">
+  </div>
+  <div class="dots-container"></div>
+</div>
+
+<div id="product-card"></div>
+
+<script>
+  class ProductSlider {
+  constructor(images, containerId) {
+    this.images = images;
+    this.container = document.getElementById(containerId);
+    this.imageContainer = this.container.querySelector('.product-images');
+    this.dotsContainer = this.container.querySelector('.dots-container');
+    this.currentImageIndex = 0;
+    this.intervalId = null;
+    this.touchStartX = 0;
+    this.touchEndX = 0;
+    this.timingSlides = 1500;
+    this.init();
+  }
+
+  init() {
+    this.images.forEach((image, index) => {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (index === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => this.showImage(index));
+      this.dotsContainer.appendChild(dot);
+    });
+
+    this.container.addEventListener('mouseenter', () => this.startAutoSlide());
+    this.container.addEventListener('mouseleave', () => this.stopAutoSlide());
+    this.container.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+    this.container.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+    this.container.addEventListener('touchend', () => this.handleTouchEnd());
+    this.dotsContainer.addEventListener('click', () => this.stopAutoSlide());
+    this.showImage(this.currentImageIndex);
+  }
+
+  showImage(index) {
+    if (index >= 0 && index < this.images.length) {
+      this.imageContainer.style.transform = `translateX(-${index * 100}%)`;
+      this.container.querySelector('.dot.active').classList.remove('active');
+      this.container.querySelectorAll('.dot')[index].classList.add('active');
+      this.currentImageIndex = index;
+    }
+  }
+
+  startAutoSlide() {
+    this.intervalId = setInterval(() => {
+      this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+      this.showImage(this.currentImageIndex);
+    }, this.timingSlides);
+  }
+
+  stopAutoSlide() {
+    clearInterval(this.intervalId);
+  }
+
+  handleTouchStart(e) {
+    this.touchStartX = e.touches[0].clientX;
+  }
+
+  handleTouchMove(e) {
+    this.touchEndX = e.touches[0].clientX;
+  }
+
+  handleTouchEnd() {
+    const swipeLength = this.touchEndX - this.touchStartX;
+    if (swipeLength > 0) {
+      this.currentImageIndex = Math.max(0, this.currentImageIndex - 1);
+    } else if (swipeLength < 0) {
+      this.currentImageIndex = Math.min(this.images.length - 1, this.currentImageIndex + 1);
+    }
+    this.showImage(this.currentImageIndex);
+  }
+
+}
+
+const slidesCount = document.querySelectorAll('.product-images');
+const imagesDots = [];
+
+slidesCount.forEach(container => {
+  const images = container.querySelectorAll('img');
+  images.forEach(img => {
+    imagesDots.push(img);
+  });
+});
+
+const slider = new ProductSlider(imagesDots, 'product-card');
+
+</script>
+
+</body>
+</html>
